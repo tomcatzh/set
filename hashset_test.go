@@ -203,7 +203,11 @@ func TestString(t *testing.T) {
 
 			Convey("Testing the set to the string", func() {
 				ss := fmt.Sprintf("%v", s)
-				So(ss, ShouldEqual, "Set{One Two}")
+				So(len(ss), ShouldEqual, len("Set{One Two}"))
+				So(ss, ShouldStartWith, "Set{")
+				So(ss, ShouldEndWith, "}")
+				So(ss, ShouldContainSubstring, "One")
+				So(ss, ShouldContainSubstring, "Two")
 			})
 		})
 	})
