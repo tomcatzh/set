@@ -142,3 +142,11 @@ func (set *HashSet) IsSuperset(other *HashSet) bool {
 
 	return true
 }
+
+func (set *HashSet) IsSubset(other *HashSet) bool {
+	if other == nil {
+		return false
+	}
+
+	return other.IsSuperset(set)
+}

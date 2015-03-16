@@ -213,17 +213,22 @@ func TestString(t *testing.T) {
 	})
 }
 
-func TestIsSuperset(t *testing.T) {
+func TestSuperAndSub(t *testing.T) {
 	Convey("Create two new HashSet", t, func() {
 		super := NewHashSet()
 		sub := NewHashSet()
 
 		Convey("If other set is nil should return false", func() {
 			So(super.IsSuperset(nil), ShouldBeFalse)
+			So(sub.IsSubset(nil), ShouldBeFalse)
 		})
 
 		Convey("Super set is empty should always return false", func() {
 			So(super.IsSuperset(sub), ShouldBeFalse)
+
+			Convey("Also check subset is false", func() {
+				So(sub.IsSubset(super), ShouldBeFalse)
+			})
 		})
 
 		Convey("Add elements \"One\" \"Two\" to super set should be OK", func() {
@@ -232,6 +237,10 @@ func TestIsSuperset(t *testing.T) {
 
 			Convey("Sub set is empty should return true", func() {
 				So(super.IsSuperset(sub), ShouldBeTrue)
+
+				Convey("Also check subset is true", func() {
+					So(sub.IsSubset(super), ShouldBeTrue)
+				})
 			})
 
 			Convey("Add elements \"One\" \"Two\" \"Three\" to sub set should be OK", func() {
@@ -241,6 +250,10 @@ func TestIsSuperset(t *testing.T) {
 
 				Convey("Sub set bigger than super set should be false", func() {
 					So(super.IsSuperset(sub), ShouldBeFalse)
+
+					Convey("Also check subset is false", func() {
+						So(sub.IsSubset(super), ShouldBeFalse)
+					})
 				})
 			})
 
@@ -249,6 +262,10 @@ func TestIsSuperset(t *testing.T) {
 
 				Convey("Sub set have the element does not contain in super set return false", func() {
 					So(super.IsSuperset(sub), ShouldBeFalse)
+
+					Convey("Also check subset is false", func() {
+						So(sub.IsSubset(super), ShouldBeFalse)
+					})
 				})
 			})
 
@@ -258,6 +275,10 @@ func TestIsSuperset(t *testing.T) {
 
 				Convey("Sub set is same of super set return false", func() {
 					So(super.IsSuperset(sub), ShouldBeFalse)
+
+					Convey("Also check subset is false", func() {
+						So(sub.IsSubset(super), ShouldBeFalse)
+					})
 				})
 			})
 
@@ -267,9 +288,12 @@ func TestIsSuperset(t *testing.T) {
 				Convey("Super bigger than sub set and contain all then sub set's elements should return true", func() {
 					So(super.IsSuperset(sub), ShouldBeTrue)
 				})
+
+				Convey("Also check subset is true", func() {
+					So(sub.IsSubset(super), ShouldBeTrue)
+				})
 			})
 
 		})
-
 	})
 }
