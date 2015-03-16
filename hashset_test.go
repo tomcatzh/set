@@ -212,3 +212,64 @@ func TestString(t *testing.T) {
 		})
 	})
 }
+
+func TestIsSuperset(t *testing.T) {
+	Convey("Create two new HashSet", t, func() {
+		super := NewHashSet()
+		sub := NewHashSet()
+
+		Convey("If other set is nil should return false", func() {
+			So(super.IsSuperset(nil), ShouldBeFalse)
+		})
+
+		Convey("Super set is empty should always return false", func() {
+			So(super.IsSuperset(sub), ShouldBeFalse)
+		})
+
+		Convey("Add elements \"One\" \"Two\" to super set should be OK", func() {
+			So(super.Add("One"), ShouldBeTrue)
+			So(super.Add("Two"), ShouldBeTrue)
+
+			Convey("Sub set is empty should return true", func() {
+				So(super.IsSuperset(sub), ShouldBeTrue)
+			})
+
+			Convey("Add elements \"One\" \"Two\" \"Three\" to sub set should be OK", func() {
+				So(sub.Add("One"), ShouldBeTrue)
+				So(sub.Add("Two"), ShouldBeTrue)
+				So(sub.Add("Three"), ShouldBeTrue)
+
+				Convey("Sub set bigger than super set should be false", func() {
+					So(super.IsSuperset(sub), ShouldBeFalse)
+				})
+			})
+
+			Convey("Add elements \"Three\" to sub set should be OK", func() {
+				So(sub.Add("Three"), ShouldBeTrue)
+
+				Convey("Sub set have the element does not contain in super set return false", func() {
+					So(super.IsSuperset(sub), ShouldBeFalse)
+				})
+			})
+
+			Convey("Add elements \"One\" \"Two\" to sub set should be OK", func() {
+				So(sub.Add("One"), ShouldBeTrue)
+				So(sub.Add("Two"), ShouldBeTrue)
+
+				Convey("Sub set is same of super set return false", func() {
+					So(super.IsSuperset(sub), ShouldBeFalse)
+				})
+			})
+
+			Convey("Add elements \"One\" to sub set should be OK", func() {
+				So(sub.Add("One"), ShouldBeTrue)
+
+				Convey("Super bigger than sub set and contain all then sub set's elements should return true", func() {
+					So(super.IsSuperset(sub), ShouldBeTrue)
+				})
+			})
+
+		})
+
+	})
+}
