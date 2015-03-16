@@ -1,5 +1,5 @@
 // Copyright 2015 Tomcat Zhang. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
 // This an execises for for 'Go Programming & Concurrency in Practice'
@@ -47,11 +47,12 @@ func (set *HashSet) Contains(e interface{}) bool {
 	return set.m[e]
 }
 
-// Return how many elements is in the set
+// Return how many elements is in the set.
 func (set *HashSet) Len() int {
 	return len(set.m)
 }
 
+// Check is the other set same of this set.
 func (set *HashSet) Same(other *HashSet) bool {
 	if other == nil {
 		return false
@@ -70,6 +71,7 @@ func (set *HashSet) Same(other *HashSet) bool {
 	return true
 }
 
+// Return all the elements in HashSet by a slice object.
 func (set *HashSet) Elements() []interface{} {
 	initialLen := len(set.m)
 	snapshot := make([]interface{}, initialLen)
@@ -93,6 +95,7 @@ func (set *HashSet) Elements() []interface{} {
 	return snapshot
 }
 
+// Print the set elements.
 func (set *HashSet) String() string {
 	var buf bytes.Buffer
 
@@ -114,6 +117,7 @@ func (set *HashSet) String() string {
 	return buf.String()
 }
 
+// Check is this set is a super set of other.
 func (set *HashSet) IsSuperset(other *HashSet) bool {
 	if other == nil {
 		return false
