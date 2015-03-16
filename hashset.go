@@ -113,3 +113,28 @@ func (set *HashSet) String() string {
 
 	return buf.String()
 }
+
+func (set *HashSet) IsSuperset(other *HashSet) bool {
+	if other == nil {
+		return false
+	}
+
+	oneLen := set.Len()
+	otherLen := other.Len()
+
+	if oneLen == 0 || oneLen <= otherLen {
+		return false
+	}
+
+	if oneLen > 0 && otherLen == 0 {
+		return true
+	}
+
+	for _, v := range other.Elements() {
+		if !set.Contains(v) {
+			return false
+		}
+	}
+
+	return true
+}
