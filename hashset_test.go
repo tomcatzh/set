@@ -1,6 +1,7 @@
 package set
 
 import (
+	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -187,6 +188,22 @@ func TestElements(t *testing.T) {
 				Convey("Elements should not have \"Three\"", func() {
 					So(e, ShouldNotContain, "Three")
 				})
+			})
+		})
+	})
+}
+
+func TestString(t *testing.T) {
+	Convey("Create a new HashSet", t, func() {
+		s := NewHashSet()
+
+		Convey("Add elements \"One\" \"Two\" to set should be OK", func() {
+			So(s.Add("One"), ShouldBeTrue)
+			So(s.Add("Two"), ShouldBeTrue)
+
+			Convey("Testing the set to the string", func() {
+				ss := fmt.Sprintf("%v", s)
+				So(ss, ShouldEqual, "Set{One Two}")
 			})
 		})
 	})

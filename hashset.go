@@ -6,6 +6,11 @@
 // It provided such as HashSet data structs.
 package set
 
+import (
+	"bytes"
+	"fmt"
+)
+
 // HashSet just like java.util.HashSet
 type HashSet struct {
 	m map[interface{}]bool
@@ -86,4 +91,25 @@ func (set *HashSet) Elements() []interface{} {
 	}
 
 	return snapshot
+}
+
+func (set *HashSet) String() string {
+	var buf bytes.Buffer
+
+	buf.WriteString("Set{")
+
+	first := true
+
+	for key := range set.m {
+		if first {
+			first = false
+		} else {
+			buf.WriteString(" ")
+		}
+		buf.WriteString(fmt.Sprintf("%v", key))
+	}
+
+	buf.WriteString("}")
+
+	return buf.String()
 }
