@@ -160,3 +160,34 @@ func TestSame(t *testing.T) {
 		})
 	})
 }
+
+func TestElements(t *testing.T) {
+	Convey("Create a new HashSet", t, func() {
+		s := NewHashSet()
+
+		Convey("Add elements \"One\" \"Two\" to set should be OK", func() {
+			So(s.Add("One"), ShouldBeTrue)
+			So(s.Add("Two"), ShouldBeTrue)
+
+			Convey("Get elements from set", func() {
+				e := s.Elements()
+
+				Convey("Elements length should be two", func() {
+					So(len(e), ShouldEqual, 2)
+				})
+
+				Convey("Elements should have \"One\"", func() {
+					So(e, ShouldContain, "One")
+				})
+
+				Convey("Elements should have \"Two\"", func() {
+					So(e, ShouldContain, "Two")
+				})
+
+				Convey("Elements should not have \"Three\"", func() {
+					So(e, ShouldNotContain, "Three")
+				})
+			})
+		})
+	})
+}
