@@ -46,3 +46,21 @@ func (set *HashSet) Contains(e interface{}) bool {
 func (set *HashSet) Len() int {
 	return len(set.m)
 }
+
+func (set *HashSet) Same(other *HashSet) bool {
+	if other == nil {
+		return false
+	}
+
+	if set.Len() != other.Len() {
+		return false
+	}
+
+	for key := range set.m {
+		if !other.Contains(key) {
+			return false
+		}
+	}
+
+	return true
+}
