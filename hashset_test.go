@@ -297,3 +297,50 @@ func TestSuperAndSub(t *testing.T) {
 		})
 	})
 }
+
+func TestUnion(t *testing.T) {
+	Convey("Create two new HashSet", t, func() {
+		a := NewHashSet()
+		b := NewHashSet()
+
+		Convey("Union a nil set should cause a panic", func() {
+			So(func() { a.Union(nil) }, ShouldPanicWith, "Other set is nil")
+		})
+
+		Convey("Add \"One\" \"Two\" to set a and add \"Three\" to set b", func() {
+			So(a.Add("One"), ShouldBeTrue)
+			So(a.Add("Two"), ShouldBeTrue)
+			So(b.Add("Three"), ShouldBeTrue)
+
+			Convey("A set union b set should be OK, both a and b should not be changed", func() {
+				u := a.Union(b)
+
+				So(u.Len(), ShouldEqual, 3)
+				So(u.Contains("One"), ShouldBeTrue)
+				So(u.Contains("Two"), ShouldBeTrue)
+				So(u.Contains("Three"), ShouldBeTrue)
+
+				So(a.Len(), ShouldEqual, 2)
+				So(a.Contains("One"), ShouldBeTrue)
+				So(a.Contains("Two"), ShouldBeTrue)
+				So(b.Len(), ShouldEqual, 1)
+				So(b.Contains("Three"), ShouldBeTrue)
+			})
+
+			Convey("B set union a set should be OK, both a and b should not be changed", func() {
+				u := b.Union(a)
+
+				So(u.Len(), ShouldEqual, 3)
+				So(u.Contains("One"), ShouldBeTrue)
+				So(u.Contains("Two"), ShouldBeTrue)
+				So(u.Contains("Three"), ShouldBeTrue)
+
+				So(a.Len(), ShouldEqual, 2)
+				So(a.Contains("One"), ShouldBeTrue)
+				So(a.Contains("Two"), ShouldBeTrue)
+				So(b.Len(), ShouldEqual, 1)
+				So(b.Contains("Three"), ShouldBeTrue)
+			})
+		})
+	})
+}

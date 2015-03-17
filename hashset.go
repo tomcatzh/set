@@ -150,3 +150,21 @@ func (set *HashSet) IsSubset(other *HashSet) bool {
 
 	return other.IsSuperset(set)
 }
+
+func (set *HashSet) Union(other *HashSet) *HashSet {
+	if other == nil {
+		panic("Other set is nil")
+	}
+
+	result := NewHashSet()
+
+	for _, v := range set.Elements() {
+		result.Add(v)
+	}
+
+	for _, v := range other.Elements() {
+		result.Add(v)
+	}
+
+	return result
+}
