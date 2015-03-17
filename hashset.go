@@ -168,3 +168,29 @@ func (set *HashSet) Union(other *HashSet) *HashSet {
 
 	return result
 }
+
+func (set *HashSet) Intersect(other *HashSet) *HashSet {
+	if other == nil {
+		panic("Other set is nil")
+	}
+
+	result := NewHashSet()
+
+	var b, s *HashSet
+
+	if other.Len() > set.Len() {
+		b = other
+		s = set
+	} else {
+		b = set
+		s = other
+	}
+
+	for _, v := range s.Elements() {
+		if b.Contains(v) {
+			result.Add(v)
+		}
+	}
+
+	return result
+}

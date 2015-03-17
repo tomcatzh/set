@@ -312,34 +312,113 @@ func TestUnion(t *testing.T) {
 			So(a.Add("Two"), ShouldBeTrue)
 			So(b.Add("Three"), ShouldBeTrue)
 
-			Convey("A set union b set should be OK, both a and b should not be changed", func() {
-				u := a.Union(b)
-
-				So(u.Len(), ShouldEqual, 3)
-				So(u.Contains("One"), ShouldBeTrue)
-				So(u.Contains("Two"), ShouldBeTrue)
-				So(u.Contains("Three"), ShouldBeTrue)
-
+			checkOrig := func() {
 				So(a.Len(), ShouldEqual, 2)
 				So(a.Contains("One"), ShouldBeTrue)
 				So(a.Contains("Two"), ShouldBeTrue)
 				So(b.Len(), ShouldEqual, 1)
 				So(b.Contains("Three"), ShouldBeTrue)
+			}
+
+			checkUnion := func(u *HashSet) {
+				So(u.Len(), ShouldEqual, 3)
+				So(u.Contains("One"), ShouldBeTrue)
+				So(u.Contains("Two"), ShouldBeTrue)
+				So(u.Contains("Three"), ShouldBeTrue)
+			}
+
+			Convey("A set union b set should be OK, both a and b should not be changed", func() {
+				u := a.Union(b)
+
+				checkUnion(u)
+
+				checkOrig()
 			})
 
 			Convey("B set union a set should be OK, both a and b should not be changed", func() {
 				u := b.Union(a)
 
-				So(u.Len(), ShouldEqual, 3)
-				So(u.Contains("One"), ShouldBeTrue)
-				So(u.Contains("Two"), ShouldBeTrue)
-				So(u.Contains("Three"), ShouldBeTrue)
+				checkUnion(u)
 
+				checkOrig()
+			})
+		})
+	})
+}
+
+func TestIntersect(t *testing.T) {
+	Convey("Create two new HashSet", t, func() {
+		a := NewHashSet()
+		b := NewHashSet()
+
+		Convey("Intersect a nil set should cause a panic", func() {
+			So(func() { a.Intersect(nil) }, ShouldPanicWith, "Other set is nil")
+		})
+
+		Convey("Add \"One\" \"Two\" to set a and add \"Three\" to set b", func() {
+			So(a.Add("One"), ShouldBeTrue)
+			So(a.Add("Two"), ShouldBeTrue)
+			So(b.Add("Three"), ShouldBeTrue)
+
+			checkOrig := func() {
 				So(a.Len(), ShouldEqual, 2)
 				So(a.Contains("One"), ShouldBeTrue)
 				So(a.Contains("Two"), ShouldBeTrue)
 				So(b.Len(), ShouldEqual, 1)
 				So(b.Contains("Three"), ShouldBeTrue)
+			}
+
+			Convey("A set intersect b set should be OK, both a and b should not be changed", func() {
+				i := a.Intersect(b)
+
+				So(i.Len(), ShouldEqual, 0)
+
+				checkOrig()
+			})
+
+			Convey("B set intersect a set should be OK, both a and b should not be changed", func() {
+				i := b.Intersect(a)
+
+				So(i.Len(), ShouldEqual, 0)
+
+				checkOrig()
+			})
+		})
+
+		Convey("Add \"One\" \"Two\" to set a and add \"Two\" \"Three\" to set b", func() {
+			So(a.Add("One"), ShouldBeTrue)
+			So(a.Add("Two"), ShouldBeTrue)
+			So(b.Add("Two"), ShouldBeTrue)
+			So(b.Add("Three"), ShouldBeTrue)
+
+			checkOrig := func() {
+				So(a.Len(), ShouldEqual, 2)
+				So(a.Contains("One"), ShouldBeTrue)
+				So(a.Contains("Two"), ShouldBeTrue)
+				So(b.Len(), ShouldEqual, 2)
+				So(b.Contains("Two"), ShouldBeTrue)
+				So(b.Contains("Three"), ShouldBeTrue)
+			}
+
+			checkUnion := func(i *HashSet) {
+				So(i.Len(), ShouldEqual, 1)
+				So(i.Contains("Two"), ShouldBeTrue)
+			}
+
+			Convey("A set intersect b set should be OK, both a and b should not be changed", func() {
+				i := a.Intersect(b)
+
+				checkUnion(i)
+
+				checkOrig()
+			})
+
+			Convey("B set intersect a set should be OK, both a and b should not be changed", func() {
+				i := b.Intersect(a)
+
+				checkUnion(i)
+
+				checkOrig()
 			})
 		})
 	})
