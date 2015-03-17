@@ -52,17 +52,22 @@ func Union(set, other Set) Set {
 
 	result := NewSimpleSet()
 
-	for _, v := range set.Elements() {
-		result.Add(v)
+	if set.Len() > 0 {
+		for _, v := range set.Elements() {
+			result.Add(v)
+		}
 	}
 
-	for _, v := range other.Elements() {
-		result.Add(v)
+	if other.Len() > 0 {
+		for _, v := range other.Elements() {
+			result.Add(v)
+		}
 	}
 
 	return result
 }
 
+// Return the intersect set of the set and the other
 func Intersect(set, other Set) Set {
 	if other == nil || set == nil {
 		panic("The set is nil")
@@ -70,19 +75,46 @@ func Intersect(set, other Set) Set {
 
 	result := NewSimpleSet()
 
-	var b, s Set
-
-	if other.Len() > set.Len() {
-		b = other
-		s = set
-	} else {
-		b = set
-		s = other
+	if other.Len() == 0 || set.Len() == 0 {
+		return result
 	}
 
-	for _, v := range s.Elements() {
-		if b.Contains(v) {
-			result.Add(v)
+	if other.Len() > set.Len() {
+		for _, v := range set.Elements() {
+			if other.Contains(v) {
+				result.Add(v)
+			}
+		}
+	} else {
+		for _, v := range other.Elements() {
+			if set.Contains(v) {
+				result.Add(v)
+			}
+		}
+	}
+
+	return result
+}
+
+// Return the difference of the set and the other
+func Difference(set, other Set) Set {
+	if other == nil || set == nil {
+		panic("The set is nil")
+	}
+
+	result := NewSimpleSet()
+
+	if set.Len() > 0 {
+		if other.Len() == 0 {
+			for _, v := range set.Elements() {
+				result.Add(v)
+			}
+		} else {
+			for _, v := range set.Elements() {
+				if !other.Contains(v) {
+					result.Add(v)
+				}
+			}
 		}
 	}
 

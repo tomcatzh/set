@@ -129,6 +129,12 @@ func TestIntersect(t *testing.T) {
 			So(func() { Intersect(nil, nil) }, ShouldPanicWith, "The set is nil")
 		})
 
+		Convey("Two empty set have an empty intersect set", func() {
+			i := Intersect(a, b)
+
+			So(i.Len(), ShouldEqual, 0)
+		})
+
 		Convey("Add \"One\" \"Two\" to set a and add \"Three\" to set b", func() {
 			So(a.Add("One"), ShouldBeTrue)
 			So(a.Add("Two"), ShouldBeTrue)
@@ -164,14 +170,16 @@ func TestIntersect(t *testing.T) {
 			So(a.Add("Two"), ShouldBeTrue)
 			So(b.Add("Two"), ShouldBeTrue)
 			So(b.Add("Three"), ShouldBeTrue)
+			So(b.Add("Four"), ShouldBeTrue)
 
 			checkOrig := func() {
 				So(a.Len(), ShouldEqual, 2)
 				So(a.Contains("One"), ShouldBeTrue)
 				So(a.Contains("Two"), ShouldBeTrue)
-				So(b.Len(), ShouldEqual, 2)
+				So(b.Len(), ShouldEqual, 3)
 				So(b.Contains("Two"), ShouldBeTrue)
 				So(b.Contains("Three"), ShouldBeTrue)
+				So(b.Contains("Four"), ShouldBeTrue)
 			}
 
 			checkUnion := func(i Set) {
@@ -191,6 +199,70 @@ func TestIntersect(t *testing.T) {
 				i := Intersect(b, a)
 
 				checkUnion(i)
+
+				checkOrig()
+			})
+		})
+	})
+}
+
+func TestDifference(t *testing.T) {
+	Convey("Create two new HashSet", t, func() {
+		a := NewSimpleSet()
+		b := NewSimpleSet()
+
+		Convey("Difference a nil set should cause a panic", func() {
+			So(func() { Difference(a, nil) }, ShouldPanicWith, "The set is nil")
+			So(func() { Difference(nil, a) }, ShouldPanicWith, "The set is nil")
+			So(func() { Difference(nil, nil) }, ShouldPanicWith, "The set is nil")
+		})
+
+		Convey("Add \"One\" \"Two\" to set a", func() {
+			So(a.Add("One"), ShouldBeTrue)
+			So(a.Add("Two"), ShouldBeTrue)
+
+			check := func(a Set) {
+				So(a.Len(), ShouldEqual, 2)
+				So(a.Contains("One"), ShouldBeTrue)
+				So(a.Contains("Two"), ShouldBeTrue)
+			}
+
+			Convey("A set difference empty should be same of a, both a and b should not be changed", func() {
+				d := Difference(a, b)
+
+				check(d)
+				check(a)
+			})
+		})
+
+		Convey("Add \"One\" \"Two\" to set a and add \"Three\" to set b", func() {
+			So(a.Add("One"), ShouldBeTrue)
+			So(a.Add("Two"), ShouldBeTrue)
+			So(b.Add("Three"), ShouldBeTrue)
+
+			checkOrig := func() {
+				So(a.Len(), ShouldEqual, 2)
+				So(a.Contains("One"), ShouldBeTrue)
+				So(a.Contains("Two"), ShouldBeTrue)
+				So(b.Len(), ShouldEqual, 1)
+				So(b.Contains("Three"), ShouldBeTrue)
+			}
+
+			Convey("A set difference b set should be OK, both a and b should not be changed", func() {
+				d := Difference(a, b)
+
+				So(d.Len(), ShouldEqual, 2)
+				So(d.Contains("One"), ShouldBeTrue)
+				So(d.Contains("Two"), ShouldBeTrue)
+
+				checkOrig()
+			})
+
+			Convey("B set difference a set should be OK, both a and b should not be changed", func() {
+				d := Difference(b, a)
+
+				So(d.Len(), ShouldEqual, 1)
+				So(d.Contains("Three"), ShouldBeTrue)
 
 				checkOrig()
 			})
