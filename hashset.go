@@ -2,8 +2,6 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-// This an execises for for 'Go Programming & Concurrency in Practice'
-// It provided such as HashSet data structs.
 package set
 
 import (
@@ -53,7 +51,7 @@ func (set *HashSet) Len() int {
 }
 
 // Check is the other set same of this set.
-func (set *HashSet) Same(other *HashSet) bool {
+func (set *HashSet) Same(other Set) bool {
 	if other == nil {
 		return false
 	}
@@ -115,82 +113,4 @@ func (set *HashSet) String() string {
 	buf.WriteString("}")
 
 	return buf.String()
-}
-
-// Check is this set is a super set of other.
-func (set *HashSet) IsSuperset(other *HashSet) bool {
-	if other == nil {
-		return false
-	}
-
-	oneLen := set.Len()
-	otherLen := other.Len()
-
-	if oneLen == 0 || oneLen <= otherLen {
-		return false
-	}
-
-	if oneLen > 0 && otherLen == 0 {
-		return true
-	}
-
-	for _, v := range other.Elements() {
-		if !set.Contains(v) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func (set *HashSet) IsSubset(other *HashSet) bool {
-	if other == nil {
-		return false
-	}
-
-	return other.IsSuperset(set)
-}
-
-func (set *HashSet) Union(other *HashSet) *HashSet {
-	if other == nil {
-		panic("Other set is nil")
-	}
-
-	result := NewHashSet()
-
-	for _, v := range set.Elements() {
-		result.Add(v)
-	}
-
-	for _, v := range other.Elements() {
-		result.Add(v)
-	}
-
-	return result
-}
-
-func (set *HashSet) Intersect(other *HashSet) *HashSet {
-	if other == nil {
-		panic("Other set is nil")
-	}
-
-	result := NewHashSet()
-
-	var b, s *HashSet
-
-	if other.Len() > set.Len() {
-		b = other
-		s = set
-	} else {
-		b = set
-		s = other
-	}
-
-	for _, v := range s.Elements() {
-		if b.Contains(v) {
-			result.Add(v)
-		}
-	}
-
-	return result
 }
