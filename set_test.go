@@ -233,37 +233,88 @@ func TestDifference(t *testing.T) {
 				check(d)
 				check(a)
 			})
+
+			Convey("Add \"Three\" to set b", func() {
+				So(b.Add("Three"), ShouldBeTrue)
+
+				checkOrig := func() {
+					So(a.Len(), ShouldEqual, 2)
+					So(a.Contains("One"), ShouldBeTrue)
+					So(a.Contains("Two"), ShouldBeTrue)
+					So(b.Len(), ShouldEqual, 1)
+					So(b.Contains("Three"), ShouldBeTrue)
+				}
+
+				Convey("A set difference b set should be OK, both a and b should not be changed", func() {
+					d := Difference(a, b)
+
+					So(d.Len(), ShouldEqual, 2)
+					So(d.Contains("One"), ShouldBeTrue)
+					So(d.Contains("Two"), ShouldBeTrue)
+
+					checkOrig()
+				})
+
+				Convey("B set difference a set should be OK, both a and b should not be changed", func() {
+					d := Difference(b, a)
+
+					So(d.Len(), ShouldEqual, 1)
+					So(d.Contains("Three"), ShouldBeTrue)
+
+					checkOrig()
+				})
+			})
 		})
 
-		Convey("Add \"One\" \"Two\" to set a and add \"Three\" to set b", func() {
+	})
+}
+
+func TestSymmetricDifference(t *testing.T) {
+	Convey("Create two new HashSet", t, func() {
+		a := NewSimpleSet()
+		b := NewSimpleSet()
+
+		Convey("SymmetricDifference a nil set should cause a panic", func() {
+			So(func() { SymmetricDifference(a, nil) }, ShouldPanicWith, "The set is nil")
+			So(func() { SymmetricDifference(nil, a) }, ShouldPanicWith, "The set is nil")
+			So(func() { SymmetricDifference(nil, nil) }, ShouldPanicWith, "The set is nil")
+		})
+
+		Convey("Add \"One\" \"Two\" \"Three\" to set a and add \"Three\" \"Four\" to set b", func() {
 			So(a.Add("One"), ShouldBeTrue)
 			So(a.Add("Two"), ShouldBeTrue)
+			So(a.Add("Three"), ShouldBeTrue)
 			So(b.Add("Three"), ShouldBeTrue)
+			So(b.Add("Four"), ShouldBeTrue)
 
 			checkOrig := func() {
-				So(a.Len(), ShouldEqual, 2)
+				So(a.Len(), ShouldEqual, 3)
 				So(a.Contains("One"), ShouldBeTrue)
 				So(a.Contains("Two"), ShouldBeTrue)
-				So(b.Len(), ShouldEqual, 1)
 				So(b.Contains("Three"), ShouldBeTrue)
+				So(b.Len(), ShouldEqual, 2)
+				So(b.Contains("Three"), ShouldBeTrue)
+				So(b.Contains("Four"), ShouldBeTrue)
 			}
 
-			Convey("A set difference b set should be OK, both a and b should not be changed", func() {
-				d := Difference(a, b)
+			checkUnion := func(u Set) {
+				So(u.Len(), ShouldEqual, 3)
+				So(u.Contains("One"), ShouldBeTrue)
+				So(u.Contains("Two"), ShouldBeTrue)
+				So(u.Contains("Four"), ShouldBeTrue)
+			}
 
-				So(d.Len(), ShouldEqual, 2)
-				So(d.Contains("One"), ShouldBeTrue)
-				So(d.Contains("Two"), ShouldBeTrue)
+			Convey("A set SymmetricDifference b set should be OK, both a and b should not be changed", func() {
+				d := SymmetricDifference(a, b)
 
+				checkUnion(d)
 				checkOrig()
 			})
 
-			Convey("B set difference a set should be OK, both a and b should not be changed", func() {
-				d := Difference(b, a)
+			Convey("B set SymmetricDifference a set should be OK, both a and b should not be changed", func() {
+				d := SymmetricDifference(b, a)
 
-				So(d.Len(), ShouldEqual, 1)
-				So(d.Contains("Three"), ShouldBeTrue)
-
+				checkUnion(d)
 				checkOrig()
 			})
 		})

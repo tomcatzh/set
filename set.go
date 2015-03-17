@@ -121,6 +121,14 @@ func Difference(set, other Set) Set {
 	return result
 }
 
+func SymmetricDifference(set, other Set) Set {
+	if other == nil || set == nil {
+		panic("The set is nil")
+	}
+
+	return Union(Difference(set, other), Difference(other, set))
+}
+
 func NewSimpleSet() Set {
 	return NewHashSet()
 }
